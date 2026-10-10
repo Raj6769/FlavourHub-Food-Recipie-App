@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Collections - FlavorHub</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f7f7f7;
+    color:#222;
+}
+
+nav{
+    background:#ff7043;
+    padding:15px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.logo{
+    color:white;
+    font-size:25px;
+    font-weight:bold;
+}
+
+.nav-links{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.nav-links a{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.container{
+    width:90%;
+    max-width:1100px;
+    margin:35px auto;
+}
+
+h1{
+    text-align:center;
+    color:#ff5722;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+    margin-bottom:30px;
+}
+
+.create-box{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 3px 10px rgba(0,0,0,.1);
+    margin-bottom:30px;
+}
+
+.create-box h2{
+    margin-bottom:15px;
+}
+
+.form-row{
+    display:flex;
+    gap:10px;
+}
+
+input,select{
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:7px;
+    font-size:15px;
+}
+
+input{
+    flex:1;
+}
+
+button{
+    background:#ff7043;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:7px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+.collection{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    margin-bottom:25px;
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+
+.collection-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.collection-header h2{
+    color:#ff5722;
+}
+
+.delete-btn{
+    background:#e53935;
+}
+
+.recipe-list{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+}
+
+.recipe{
+    background:#fff3e0;
+    padding:15px;
+    border-radius:10px;
+}
+
+.recipe h3{
+    margin-bottom:8px;
+}
+
+.recipe p{
+    color:#666;
+    margin-bottom:10px;
+}
+
+.recipe a{
+    color:#ff5722;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+.empty{
+    text-align:center;
+    color:#777;
+    padding:15px;
+}
+
+@media(max-width:600px){
+    .form-row{
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">🍴 FlavorHub</div>
+
+    <div class="nav-links">
+        <a href="home.html">Home</a>
+        <a href="recipes.html">Recipes</a>
+        <a href="search.html">Search</a>
+        <a href="favorites.html">Favorites</a>
+        <a href="collections.html">Collections</a>
+        <a href="submit-recipe.html">Submit Recipe</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <h1>📚 My Collections</h1>
+    <p class="subtitle">
+        Create your own personalized recipe collections.
+    </p>
+
+    <div class="create-box">
+        <h2>Create New Collection</h2>
+
+        <div class="form-row">
+            <input
+                type="text"
+                id="collectionName"
+                placeholder="Example: Breakfast Recipes">
+
+            <button onclick="createCollection()">
+                + Create
+            </button>
+        </div>
+    </div>
+
+    <div id="collectionsContainer"></div>
+
+</div>
+
+<script>
+
+const defaultRecipes = {
+    "chicken-biryani":"Chicken Biryani",
+    "paneer-butter-masala":"Paneer Butter Masala",
+    "masala-dosa":"Masala Dosa",
+    "pasta":"Classic Pasta",
+    "pizza":"Margherita Pizza",
+    "fried-rice":"Vegetable Fried Rice",
+    "chicken-curry":"Chicken Curry",
+    "chocolate-cake":"Chocolate Cake",
+    "idli-sambar":"Idli Sambar",
+    "veg-biryani":"Vegetable Biryani",
+    "pancakes":"Pancakes",
+    "salad":"Fresh Vegetable Salad"
+};
+
+function getCollections(){
+    return JSON.parse(
+        localStorage.getItem("recipeCollections")
+    ) || {};
+}
+
+function saveCollections(data){
+    localStorage.setItem(
+        "recipeCollections",
+        JSON.stringify(data)
+    );
+}
+
+function createCollection(){
+
+    const input =
+        document.getElementById("collectionName");
+
+    const name = input.value.trim();
+
+    if(name === ""){
+        alert("Please enter a collection name.");
+        return;
+    }
+
+    const collections = getCollections();
+
+    if(collections[name]){
+        alert("This collection already exists.");
+        return;
+    }
+
+    collections[name] = [];
+
+    saveCollections(collections);
+
+    input.value = "";
+
+    displayCollections();
+}
+
+function deleteCollection(name){
+
+    if(!confirm("Delete this collection?")){
+        return;
+    }
+
+    const collections = getCollections();
+
+    delete collections[name];
+
+    saveCollections(collections);
+
+    displayCollections();
+}
+
+function displayCollections(){
+
+    const container =
+        document.getElementById("collectionsContainer");
+
+    const collections = getCollections();
+
+    const names = Object.keys(collections);
+
+    if(names.length === 0){
+
+        container.innerHTML = `
+            <div class="collection">
+                <div class="empty">
+                    No collections created yet.
+                    Create your first collection above!
+                </div>
+            </div>
+        `;
+
+        return;
+    }
+
+    let html = "";
+
+    names.forEach(function(name){
+
+        const recipeIds = collections[name];
+
+        html += `
+            <div class="collection">
+
+                <div class="collection-header">
+
+                    <h2>📁 ${name}</h2>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteCollection('${escapeQuotes(name)}')">
+                        Delete
+                    </button>
+
+                </div>
+
+                <div class="recipe-list">
+        `;
+
+        if(recipeIds.length === 0){
+
+            html += `
+                <div class="empty">
+                    No recipes in this collection yet.
+                </div>
+            `;
+
+        }else{
+
+            recipeIds.forEach(function(id){
+
+                const recipeName =
+                    defaultRecipes[id] || id;
+
+                html += `
+                    <div class="recipe">
+
+                        <h3>${recipeName}</h3>
+
+                        <p>Saved in ${name}</p>
+
+                        <a href="recipe.html?id=${id}">
+                            View Recipe →
+                        </a>
+
+                    </div>
+                `;
+            });
+        }
+
+        html += `
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+function escapeQuotes(text){
+    return text.replace(/'/g,"\\'");
+}
+
+displayCollections();
+
+</script>
+
+</body>
+</html>

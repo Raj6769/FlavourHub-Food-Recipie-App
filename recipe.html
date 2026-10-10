@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Details - FlavorHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        /* NAVBAR */
+        nav {
+            background: #ff7043;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* MAIN */
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .recipe-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .recipe-header {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .recipe-icon {
+            height: 250px;
+            background: #fff3e0;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 110px;
+        }
+
+        .recipe-title {
+            font-size: 38px;
+            margin-bottom: 15px;
+        }
+
+        .description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .info {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .info span {
+            background: #ffe0d6;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        /* BUTTONS */
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .save-btn {
+            background: #ff7043;
+            color: white;
+        }
+
+        .share-btn {
+            background: #333;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        /* CONTENT GRID */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+            margin-top: 35px;
+        }
+
+        .section {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+            color: #ff5722;
+        }
+
+        .ingredients {
+            display: grid;
+            gap: 10px;
+        }
+
+        .ingredient {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 7px;
+        }
+
+        .steps {
+            display: grid;
+            gap: 15px;
+        }
+
+        .step {
+            display: flex;
+            gap: 15px;
+            line-height: 1.5;
+        }
+
+        .step-number {
+            min-width: 35px;
+            height: 35px;
+            background: #ff7043;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* RATING */
+        .rating-section {
+            margin-top: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stars {
+            margin-top: 10px;
+        }
+
+        .star {
+            font-size: 35px;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .star.active {
+            color: #ffb300;
+        }
+
+        #ratingMessage {
+            margin-top: 10px;
+            color: #555;
+        }
+
+        /* ERROR */
+        .error {
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+        }
+
+        .error h1 {
+            color: #e53935;
+            margin-bottom: 15px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #ff7043;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 750px) {
+            .recipe-header {
+                grid-template-columns: 1fr;
+            }
+
+            .recipe-icon {
+                height: 200px;
+            }
+
+            .recipe-title {
+                font-size: 30px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="logo">🍴 FlavorHub</div>
+
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="recipes.html">Recipes</a>
+            <a href="search.html">Search</a>
+            <a href="favorites.html">Favorites</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div id="recipeContainer"></div>
+    </div>
+
+    <script>
+
+        /* ==============================
+           RECIPE DATA
+        ============================== */
+
+        const recipes = {
+
+            "chicken-biryani": {
+                name: "Chicken Biryani",
+                cuisine: "Indian",
+                diet: "Non-Vegetarian",
+                time: "60 min",
+                rating: "4.8",
+                icon: "🍗",
+                description: "A flavorful Indian rice dish made with aromatic spices, basmati rice and tender chicken.",
+                ingredients: [
+                    "2 cups basmati rice",
+                    "500g chicken",
+                    "2 onions",
+                    "2 tomatoes",
+                    "1 cup yogurt",
+                    "2 tbsp biryani masala",
+                    "1 tsp turmeric",
+                    "1 tsp chili powder",
+                    "Ginger garlic paste",
+                    "Salt",
+                    "Oil",
+                    "Fresh coriander"
+                ],
+                steps: [
+                    "Wash and soak the basmati rice for about 20 minutes.",
+                    "Marinate the chicken with yogurt, spices and ginger garlic paste.",
+                    "Cook onions until golden brown.",
+                    "Add tomatoes and marinated chicken.",
+                    "Cook the chicken until it becomes tender.",
+                    "Cook the rice separately until partially done.",
+                    "Layer the rice over the chicken.",
+                    "Cover and cook on low heat for 15 minutes.",
+                    "Garnish with coriander and serve hot."
+                ]
+            },
+
+            "paneer-butter-masala": {
+                name: "Paneer Butter Masala",
+                cuisine: "Indian",
+                diet: "Vegetarian",
+                time: "35 min",
+                rating: "4.7",
+                icon: "🥘",
+                description: "A creamy Indian curry prepared with paneer, tomato gravy and aromatic spices.",
+                ingredients: [
+                    "250g paneer",
+                    "3 tomatoes",
+                    "1 onion",
+                    "2 tbsp butter",
+                    "1/2 cup cream",
+                    "1 tsp garam masala",
+                    "1 tsp chili powder",
+                    "1 tsp ginger garlic paste",
+                    "Salt",
+                    "Coriander"
+                ],
+                steps: [
+                    "Cut paneer into small cubes.",
+                    "Heat butter in a pan.",
+                    "Add onions and cook until soft.",
+                    "Add tomatoes and cook until soft.",
+                    "Add ginger garlic paste and spices.",
+                    "Blend the mixture into a smooth gravy.",
+                    "Add paneer and cream.",
+                    "Cook for 5 to 7 minutes.",
+                    "Garnish with coriander and serve."
+                ]
+            },
+
+            "masala-dosa": {
+                name: "Masala Dosa",
+                cuisine: "Indian",
+                diet: "Vegetarian",
+                time: "30 min",
+                rating: "4.6",
+                icon: "🥞",
+                description: "A crispy South Indian dosa filled with a spicy potato mixture.",
+                ingredients: [
+                    "Dosa batter",
+                    "3 potatoes",
+                    "1 onion",
+                    "Green chillies",
+                    "Mustard seeds",
+                    "Curry leaves",
+                    "Turmeric",
+                    "Salt",
+                    "Oil"
+                ],
+                steps: [
+                    "Boil and mash the potatoes.",
+                    "Heat oil and add mustard seeds.",
+                    "Add curry leaves, onions and green chillies.",
+                    "Add turmeric and mashed potatoes.",
+                    "Cook the potato mixture for a few minutes.",
+                    "Heat a dosa pan.",
+                    "Spread dosa batter into a thin circle.",
+                    "Place potato masala in the center.",
+                    "Fold and serve with chutney and sambar."
+                ]
+            },
+
+            "pasta": {
+                name: "Classic Pasta",
+                cuisine: "Italian",
+                diet: "Vegetarian",
+                time: "25 min",
+                rating: "4.5",
+                icon: "🍝",
+                description: "Simple and delicious pasta cooked with vegetables and a flavorful tomato sauce.",
+                ingredients: [
+                    "200g pasta",
+                    "2 tomatoes",
+                    "1 onion",
+                    "Capsicum",
+                    "2 cloves garlic",
+                    "2 tbsp tomato sauce",
+                    "1 tsp oregano",
+                    "Salt",
+                    "Pepper",
+                    "Oil"
+                ],
+                steps: [
+                    "Boil pasta in salted water.",
+                    "Drain the pasta and keep it aside.",
+                    "Heat oil in a pan.",
+                    "Add garlic and onion.",
+                    "Add tomatoes and capsicum.",
+                    "Add tomato sauce and oregano.",
+                    "Add cooked pasta.",
+                    "Mix everything well.",
+                    "Serve hot."
+                ]
+            },
+
+            "pizza": {
+                name: "Margherita Pizza",
+                cuisine: "Italian",
+                diet: "Vegetarian",
+                time: "40 min",
+                rating: "4.6",
+                icon: "🍕",
+                description: "A classic pizza topped with tomato sauce, mozzarella cheese and fresh basil.",
+                ingredients: [
+                    "Pizza base",
+                    "Tomato sauce",
+                    "Mozzarella cheese",
+                    "Tomatoes",
+                    "Basil leaves",
+                    "Oregano",
+                    "Olive oil"
+                ],
+                steps: [
+                    "Place the pizza base on a baking tray.",
+                    "Spread tomato sauce over the base.",
+                    "Add mozzarella cheese.",
+                    "Add sliced tomatoes.",
+                    "Sprinkle oregano.",
+                    "Bake until the cheese melts.",
+                    "Add fresh basil leaves.",
+                    "Serve hot."
+                ]
+            },
+
+            "fried-rice": {
+                name: "Vegetable Fried Rice",
+                cuisine: "Chinese",
+                diet: "Vegan",
+                time: "25 min",
+                rating: "4.4",
+                icon: "🍚",
+                description: "Quick and tasty fried rice prepared with vegetables and simple Asian sauces.",
+                ingredients: [
+                    "2 cups cooked rice",
+                    "Carrot",
+                    "Beans",
+                    "Capsicum",
+                    "Spring onion",
+                    "Soy sauce",
+                    "Pepper",
+                    "Salt",
+                    "Oil"
+                ],
+                steps: [
+                    "Heat oil in a large pan.",
+                    "Add chopped vegetables.",
+                    "Stir fry the vegetables.",
+                    "Add cooked rice.",
+                    "Add soy sauce and pepper.",
+                    "Mix everything well.",
+                    "Cook for a few minutes.",
+                    "Garnish with spring onion."
+                ]
+            },
+
+            "chicken-curry": {
+                name: "Chicken Curry",
+                cuisine: "Indian",
+                diet: "Non-Vegetarian",
+                time: "45 min",
+                rating: "4.5",
+                icon: "🍛",
+                description: "A spicy and flavorful chicken curry prepared with onions, tomatoes and Indian spices.",
+                ingredients: [
+                    "500g chicken",
+                    "2 onions",
+                    "2 tomatoes",
+                    "Ginger garlic paste",
+                    "Turmeric",
+                    "Chili powder",
+                    "Garam masala",
+                    "Salt",
+                    "Oil",
+                    "Coriander"
+                ],
+                steps: [
+                    "Heat oil in a pan.",
+                    "Add onions and cook until golden.",
+                    "Add ginger garlic paste.",
+                    "Add tomatoes and cook well.",
+                    "Add all spices.",
+                    "Add chicken pieces.",
+                    "Add water and cover the pan.",
+                    "Cook until chicken is tender.",
+                    "Garnish with coriander."
+                ]
+            },
+
+            "chocolate-cake": {
+                name: "Chocolate Cake",
+                cuisine: "International",
+                diet: "Vegetarian",
+                time: "50 min",
+                rating: "4.9",
+                icon: "🍰",
+                description: "A soft and delicious chocolate cake perfect for celebrations and special occasions.",
+                ingredients: [
+                    "1 cup flour",
+                    "1/2 cup cocoa powder",
+                    "1 cup sugar",
+                    "2 eggs",
+                    "1/2 cup milk",
+                    "1/2 cup butter",
+                    "1 tsp baking powder",
+                    "1 tsp vanilla essence"
+                ],
+                steps: [
+                    "Preheat the oven.",
+                    "Mix flour, cocoa powder and baking powder.",
+                    "Beat eggs and sugar.",
+                    "Add butter, milk and vanilla.",
+                    "Mix the wet and dry ingredients.",
+                    "Pour the batter into a cake pan.",
+                    "Bake until completely cooked.",
+                    "Allow the cake to cool.",
+                    "Serve with chocolate topping."
+                ]
+            },
+
+            "idli-sambar": {
+                name: "Idli Sambar",
+                cuisine: "Indian",
+                diet: "Vegetarian",
+                time: "35 min",
+                rating: "4.7",
+                icon: "🥣",
+                description: "Soft steamed idlis served with delicious South Indian sambar.",
+                ingredients: [
+                    "Idli batter",
+                    "Toor dal",
+                    "Tomatoes",
+                    "Onion",
+                    "Carrot",
+                    "Sambar powder",
+                    "Turmeric",
+                    "Salt",
+                    "Curry leaves"
+                ],
+                steps: [
+                    "Pour idli batter into idli moulds.",
+                    "Steam the idlis for about 10 to 12 minutes.",
+                    "Cook the dal until soft.",
+                    "Add vegetables and tomatoes.",
+                    "Add sambar powder and turmeric.",
+                    "Cook until vegetables are tender.",
+                    "Add seasoning with curry leaves.",
+                    "Serve hot idlis with sambar."
+                ]
+            },
+
+            "veg-biryani": {
+                name: "Vegetable Biryani",
+                cuisine: "Indian",
+                diet: "Vegetarian",
+                time: "50 min",
+                rating: "4.6",
+                icon: "🍚",
+                description: "Aromatic basmati rice cooked with fresh vegetables and Indian spices.",
+                ingredients: [
+                    "2 cups basmati rice",
+                    "Mixed vegetables",
+                    "Onion",
+                    "Tomato",
+                    "Biryani masala",
+                    "Ginger garlic paste",
+                    "Mint",
+                    "Coriander",
+                    "Salt",
+                    "Oil"
+                ],
+                steps: [
+                    "Wash and soak the rice.",
+                    "Heat oil and fry onions.",
+                    "Add ginger garlic paste.",
+                    "Add chopped vegetables.",
+                    "Add spices and salt.",
+                    "Add partially cooked rice.",
+                    "Add mint and coriander.",
+                    "Cover and cook on low heat.",
+                    "Serve hot."
+                ]
+            },
+
+            "pancakes": {
+                name: "Pancakes",
+                cuisine: "American",
+                diet: "Vegetarian",
+                time: "20 min",
+                rating: "4.4",
+                icon: "🥞",
+                description: "Soft and fluffy pancakes that are perfect for breakfast.",
+                ingredients: [
+                    "1 cup flour",
+                    "1 cup milk",
+                    "1 egg",
+                    "2 tbsp sugar",
+                    "1 tsp baking powder",
+                    "2 tbsp butter",
+                    "Pinch of salt"
+                ],
+                steps: [
+                    "Mix flour, sugar, baking powder and salt.",
+                    "Add milk and egg.",
+                    "Mix into a smooth batter.",
+                    "Heat a pan and add butter.",
+                    "Pour some batter onto the pan.",
+                    "Cook until bubbles appear.",
+                    "Flip and cook the other side.",
+                    "Serve with honey or fruit."
+                ]
+            },
+
+            "salad": {
+                name: "Fresh Vegetable Salad",
+                cuisine: "International",
+                diet: "Vegan",
+                time: "15 min",
+                rating: "4.3",
+                icon: "🥗",
+                description: "A healthy and refreshing salad made with fresh vegetables.",
+                ingredients: [
+                    "Cucumber",
+                    "Tomato",
+                    "Carrot",
+                    "Onion",
+                    "Lettuce",
+                    "Lemon juice",
+                    "Salt",
+                    "Pepper"
+                ],
+                steps: [
+                    "Wash all vegetables properly.",
+                    "Chop cucumber, tomato and carrot.",
+                    "Slice the onion.",
+                    "Add lettuce to a bowl.",
+                    "Add all chopped vegetables.",
+                    "Add lemon juice.",
+                    "Add salt and pepper.",
+                    "Mix well and serve fresh."
+                ]
+            }
+        };
+
+
+        /* ==============================
+           GET RECIPE ID FROM URL
+        ============================== */
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const recipeId = urlParams.get("id");
+
+        const container = document.getElementById("recipeContainer");
+
+        const recipe = recipes[recipeId];
+
+
+        /* ==============================
+           DISPLAY RECIPE
+        ============================== */
+
+        if (!recipe) {
+
+            container.innerHTML = `
+                <div class="error">
+                    <h1>Recipe Not Found</h1>
+                    <p>
+                        The recipe you are looking for does not exist.
+                    </p>
+
+                    <a href="recipes.html" class="back-btn">
+                        ← Back to Recipes
+                    </a>
+                </div>
+            `;
+
+        } else {
+
+            let ingredientsHTML = "";
+
+            recipe.ingredients.forEach(function(item) {
+                ingredientsHTML += `
+                    <div class="ingredient">
+                        ✓ ${item}
+                    </div>
+                `;
+            });
+
+
+            let stepsHTML = "";
+
+            recipe.steps.forEach(function(step, index) {
+                stepsHTML += `
+                    <div class="step">
+                        <div class="step-number">
+                            ${index + 1}
+                        </div>
+
+                        <div>
+                            ${step}
+                        </div>
+                    </div>
+                `;
+            });
+
+
+            container.innerHTML = `
+
+                <div class="recipe-box">
+
+                    <div class="recipe-header">
+
+                        <div class="recipe-icon">
+                            ${recipe.icon}
+                        </div>
+
+                        <div>
+
+                            <h1 class="recipe-title">
+                                ${recipe.name}
+                            </h1>
+
+                            <p class="description">
+                                ${recipe.description}
+                            </p>
+
+                            <div class="info">
+
+                                <span>
+                                    🍽️ ${recipe.cuisine}
+                                </span>
+
+                                <span>
+                                    🥗 ${recipe.diet}
+                                </span>
+
+                                <span>
+                                    ⏱️ ${recipe.time}
+                                </span>
+
+                                <span>
+                                    ⭐ ${recipe.rating}
+                                </span>
+
+                            </div>
+
+                            <div class="buttons">
+
+                                <button
+                                    class="save-btn"
+                                    onclick="saveRecipe('${recipeId}')">
+                                    ❤️ Save Recipe
+                                </button>
+
+                                <button
+                                    class="share-btn"
+                                    onclick="shareRecipe()">
+                                    🔗 Share Recipe
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="content-grid">
+
+                        <div class="section">
+
+                            <h2>🛒 Ingredients</h2>
+
+                            <div class="ingredients">
+                                ${ingredientsHTML}
+                            </div>
+
+                        </div>
+
+
+                        <div class="section">
+
+                            <h2>👨‍🍳 Preparation Steps</h2>
+
+                            <div class="steps">
+                                ${stepsHTML}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="rating-section">
+
+                        <h2>⭐ Rate This Recipe</h2>
+
+                        <div class="stars">
+
+                            <span
+                                class="star"
+                                onclick="rateRecipe(1)">
+                                ★
+                            </span>
+
+                            <span
+                                class="star"
+                                onclick="rateRecipe(2)">
+                                ★
+                            </span>
+
+                            <span
+                                class="star"
+                                onclick="rateRecipe(3)">
+                                ★
+                            </span>
+
+                            <span
+                                class="star"
+                                onclick="rateRecipe(4)">
+                                ★
+                            </span>
+
+                            <span
+                                class="star"
+                                onclick="rateRecipe(5)">
+                                ★
+                            </span>
+
+                        </div>
+
+                        <p id="ratingMessage">
+                            Click a star to rate this recipe.
+                        </p>
+
+                    </div>
+
+                </div>
+            `;
+        }
+
+
+        /* ==============================
+           SAVE RECIPE
+        ============================== */
+
+        function saveRecipe(id) {
+
+            let favorites =
+                JSON.parse(
+                    localStorage.getItem("favoriteRecipes")
+                ) || [];
+
+            if (!favorites.includes(id)) {
+
+                favorites.push(id);
+
+                localStorage.setItem(
+                    "favoriteRecipes",
+                    JSON.stringify(favorites)
+                );
+
+                alert("Recipe saved to Favorites ❤️");
+
+            } else {
+
+                alert("This recipe is already in Favorites.");
+
+            }
+        }
+
+
+        /* ==============================
+           SHARE RECIPE
+        ============================== */
+
+        function shareRecipe() {
+
+            const shareText =
+                "Check out this recipe on FlavorHub!";
+
+            if (navigator.share) {
+
+                navigator.share({
+                    title: recipe ? recipe.name : "FlavorHub Recipe",
+                    text: shareText,
+                    url: window.location.href
+                });
+
+            } else {
+
+                const textArea =
+                    document.createElement("textarea");
+
+                textArea.value = window.location.href;
+
+                document.body.appendChild(textArea);
+
+                textArea.select();
+
+                document.execCommand("copy");
+
+                document.body.removeChild(textArea);
+
+                alert("Recipe link copied!");
+            }
+        }
+
+
+        /* ==============================
+           RATING
+        ============================== */
+
+        function rateRecipe(number) {
+
+            const stars =
+                document.querySelectorAll(".star");
+
+            stars.forEach(function(star, index) {
+
+                if (index < number) {
+                    star.classList.add("active");
+                } else {
+                    star.classList.remove("active");
+                }
+
+            });
+
+            document.getElementById("ratingMessage").innerText =
+                "You rated this recipe " +
+                number +
+                " out of 5 ⭐";
+
+            localStorage.setItem(
+                "rating_" + recipeId,
+                number
+            );
+        }
+
+
+        /* ==============================
+           LOAD PREVIOUS RATING
+        ============================== */
+
+        if (recipe) {
+
+            const savedRating =
+                localStorage.getItem(
+                    "rating_" + recipeId
+                );
+
+            if (savedRating) {
+
+                const stars =
+                    document.querySelectorAll(".star");
+
+                stars.forEach(function(star, index) {
+
+                    if (index < Number(savedRating)) {
+                        star.classList.add("active");
+                    }
+
+                });
+
+                document.getElementById("ratingMessage").innerText =
+                    "Your rating: " +
+                    savedRating +
+                    " out of 5 ⭐";
+            }
+        }
+
+    </script>
+
+</body>
+</html>

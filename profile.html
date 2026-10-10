@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - FlavorHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff7f0;
+            color: #333;
+        }
+
+        nav {
+            background: #ff7043;
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 5px 8px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 45px auto;
+            padding: 30px;
+        }
+
+        .profile-card {
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px #00000012;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: #ffe0cc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            margin: 0 auto 20px;
+        }
+
+        h1 {
+            color: #e85d27;
+            margin-bottom: 10px;
+        }
+
+        .info {
+            background: #fff7f0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            text-align: left;
+            overflow-wrap: anywhere;
+        }
+
+        .info strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #e85d27;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #ff7043;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn:hover {
+            background: #e85d27;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">🍽️ FlavorHub</div>
+    <div>
+        <a href="home.html">Home</a>
+        <a href="recipes.html">Recipes</a>
+        <a href="favorites.html">Favorites</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="profile-card">
+        <div class="avatar">👤</div>
+
+        <h1>My Profile</h1>
+        <p>Your FlavorHub account details</p>
+
+        <div class="info">
+            <strong>Full Name</strong>
+            <span id="userName">Loading...</span>
+        </div>
+
+        <div class="info">
+            <strong>Email Address</strong>
+            <span id="userEmail">Loading...</span>
+        </div>
+
+        <div class="info">
+            <strong>Favorite Recipes</strong>
+            <span id="favoriteCount">0 recipes saved</span>
+        </div>
+
+        <div class="buttons">
+            <a class="btn" href="recipes.html">Explore Recipes</a>
+            <a class="btn" href="favorites.html">My Favorites</a>
+            <button class="btn" id="logoutBtn">Logout</button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    © 2026 FlavorHub | Made with ❤️ for food lovers
+</footer>
+
+<script>
+    // Check whether a user is logged in
+    if (localStorage.getItem("flavorHubLoggedIn") !== "true") {
+        alert("Please log in first.");
+        window.location.href = "login.html";
+    } else {
+        const user = JSON.parse(
+            localStorage.getItem("flavorHubCurrentUser") || "null"
+        ) || JSON.parse(
+            localStorage.getItem("flavorHubUser") || "null"
+        );
+
+        if (user) {
+            document.getElementById("userName").textContent =
+                user.name || "Not provided";
+
+            document.getElementById("userEmail").textContent =
+                user.email || "Not provided";
+        } else {
+            document.getElementById("userName").textContent =
+                "Account details not found";
+
+            document.getElementById("userEmail").textContent =
+                "Please log in again";
+        }
+
+        const favorites = JSON.parse(
+            localStorage.getItem("favoriteRecipes") || "[]"
+        );
+
+        document.getElementById("favoriteCount").textContent =
+            favorites.length + (favorites.length === 1
+                ? " recipe saved"
+                : " recipes saved");
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", function () {
+        localStorage.removeItem("flavorHubLoggedIn");
+        localStorage.removeItem("flavorHubCurrentUser");
+
+        alert("You have logged out successfully!");
+        window.location.href = "login.html";
+    });
+</script>
+
+</body>
+</html>

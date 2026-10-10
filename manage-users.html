@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Manage Users - FlavorHub</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+}
+
+header {
+    background: #ff6b00;
+    color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.user-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.user {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.avatar {
+    font-size: 45px;
+}
+
+.user h3 {
+    margin: 10px 0;
+}
+
+.empty {
+    background: white;
+    padding: 40px;
+    text-align: center;
+    border-radius: 12px;
+}
+
+@media(max-width: 700px) {
+    .user-list {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>👥 Manage Users</h1>
+
+    <nav>
+        <a href="admin-dashboard.html">Dashboard</a>
+        <a href="manage-recipes.html">Recipes</a>
+    </nav>
+
+</header>
+
+<div class="container">
+
+    <h2>Registered Users</h2>
+
+    <div id="userList" class="user-list"></div>
+
+</div>
+
+<script>
+
+function displayUsers() {
+
+    let users =
+        JSON.parse(localStorage.getItem("flavorHubUsers")) || [];
+
+    /*
+       If your older signup page only saved
+       flavorHubUser, show that user too.
+    */
+
+    if (users.length === 0) {
+
+        const oldUser =
+            JSON.parse(localStorage.getItem("flavorHubUser"));
+
+        if (oldUser) {
+            users = [oldUser];
+        }
+
+    }
+
+    const container =
+        document.getElementById("userList");
+
+    if (users.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty">
+                <h2>No Users Found</h2>
+                <p>No registered users are available.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML = users.map((user, index) => `
+
+        <div class="user">
+
+            <div class="avatar">👤</div>
+
+            <h3>${user.name || "User " + (index + 1)}</h3>
+
+            <p>
+                <b>Email:</b>
+                ${user.email || "Not available"}
+            </p>
+
+            <p>
+                <b>Account:</b> Active
+            </p>
+
+        </div>
+
+    `).join("");
+
+}
+
+displayUsers();
+
+</script>
+
+</body>
+</html>

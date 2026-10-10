@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Favorites - FlavorHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        nav {
+            background: #ff7043;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .heading h1 {
+            color: #ff5722;
+            margin-bottom: 10px;
+        }
+
+        .heading p {
+            color: #666;
+        }
+
+        #favoritesContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .icon {
+            height: 180px;
+            background: #fff3e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 85px;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card h2 {
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .info {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .info span {
+            background: #ffe0d6;
+            padding: 6px 9px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .view-btn,
+        .remove-btn {
+            border: none;
+            padding: 10px 12px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .view-btn {
+            background: #ff7043;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            flex: 1;
+        }
+
+        .remove-btn {
+            background: #e53935;
+            color: white;
+        }
+
+        .empty {
+            background: white;
+            padding: 50px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .empty h2 {
+            margin-bottom: 15px;
+        }
+
+        .browse-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: #ff7043;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">🍴 FlavorHub</div>
+
+    <div class="nav-links">
+        <a href="home.html">Home</a>
+        <a href="recipes.html">Recipes</a>
+        <a href="search.html">Search</a>
+        <a href="favorites.html">Favorites</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="heading">
+        <h1>❤️ My Favorite Recipes</h1>
+        <p>Your saved recipes are shown here.</p>
+    </div>
+
+    <div id="favoritesContainer"></div>
+
+</div>
+
+<script>
+
+const recipes = {
+
+    "chicken-biryani": {
+        name: "Chicken Biryani",
+        cuisine: "Indian",
+        diet: "Non-Vegetarian",
+        time: "60 min",
+        rating: "4.8",
+        icon: "🍗",
+        description: "A flavorful Indian rice dish made with aromatic spices and tender chicken."
+    },
+
+    "paneer-butter-masala": {
+        name: "Paneer Butter Masala",
+        cuisine: "Indian",
+        diet: "Vegetarian",
+        time: "35 min",
+        rating: "4.7",
+        icon: "🥘",
+        description: "A creamy Indian curry prepared with paneer and tomato gravy."
+    },
+
+    "masala-dosa": {
+        name: "Masala Dosa",
+        cuisine: "Indian",
+        diet: "Vegetarian",
+        time: "30 min",
+        rating: "4.6",
+        icon: "🥞",
+        description: "A crispy South Indian dosa filled with spicy potato masala."
+    },
+
+    "pasta": {
+        name: "Classic Pasta",
+        cuisine: "Italian",
+        diet: "Vegetarian",
+        time: "25 min",
+        rating: "4.5",
+        icon: "🍝",
+        description: "Simple and delicious pasta cooked with vegetables and tomato sauce."
+    },
+
+    "pizza": {
+        name: "Margherita Pizza",
+        cuisine: "Italian",
+        diet: "Vegetarian",
+        time: "40 min",
+        rating: "4.6",
+        icon: "🍕",
+        description: "Classic pizza topped with tomato sauce, mozzarella and basil."
+    },
+
+    "fried-rice": {
+        name: "Vegetable Fried Rice",
+        cuisine: "Chinese",
+        diet: "Vegan",
+        time: "25 min",
+        rating: "4.4",
+        icon: "🍚",
+        description: "Quick and tasty fried rice prepared with fresh vegetables."
+    },
+
+    "chicken-curry": {
+        name: "Chicken Curry",
+        cuisine: "Indian",
+        diet: "Non-Vegetarian",
+        time: "45 min",
+        rating: "4.5",
+        icon: "🍛",
+        description: "A spicy and flavorful Indian chicken curry."
+    },
+
+    "chocolate-cake": {
+        name: "Chocolate Cake",
+        cuisine: "International",
+        diet: "Vegetarian",
+        time: "50 min",
+        rating: "4.9",
+        icon: "🍰",
+        description: "A soft and delicious chocolate cake."
+    },
+
+    "idli-sambar": {
+        name: "Idli Sambar",
+        cuisine: "Indian",
+        diet: "Vegetarian",
+        time: "35 min",
+        rating: "4.7",
+        icon: "🥣",
+        description: "Soft steamed idlis served with delicious South Indian sambar."
+    },
+
+    "veg-biryani": {
+        name: "Vegetable Biryani",
+        cuisine: "Indian",
+        diet: "Vegetarian",
+        time: "50 min",
+        rating: "4.6",
+        icon: "🍚",
+        description: "Aromatic basmati rice cooked with fresh vegetables and spices."
+    },
+
+    "pancakes": {
+        name: "Pancakes",
+        cuisine: "American",
+        diet: "Vegetarian",
+        time: "20 min",
+        rating: "4.4",
+        icon: "🥞",
+        description: "Soft and fluffy pancakes perfect for breakfast."
+    },
+
+    "salad": {
+        name: "Fresh Vegetable Salad",
+        cuisine: "International",
+        diet: "Vegan",
+        time: "15 min",
+        rating: "4.3",
+        icon: "🥗",
+        description: "A healthy and refreshing salad made with fresh vegetables."
+    }
+};
+
+
+function displayFavorites() {
+
+    const container =
+        document.getElementById("favoritesContainer");
+
+    let favorites =
+        JSON.parse(
+            localStorage.getItem("favoriteRecipes")
+        ) || [];
+
+    if (favorites.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty">
+
+                <h2>💔 No Favorite Recipes Yet</h2>
+
+                <p>
+                    Save your favorite recipes and they will
+                    appear here.
+                </p>
+
+                <a href="recipes.html" class="browse-btn">
+                    Browse Recipes
+                </a>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    let html = "";
+
+    favorites.forEach(function(id) {
+
+        const recipe = recipes[id];
+
+        if (!recipe) {
+            return;
+        }
+
+        html += `
+
+            <div class="card">
+
+                <div class="icon">
+                    ${recipe.icon}
+                </div>
+
+                <div class="card-content">
+
+                    <h2>${recipe.name}</h2>
+
+                    <p>${recipe.description}</p>
+
+                    <div class="info">
+
+                        <span>🍽️ ${recipe.cuisine}</span>
+
+                        <span>🥗 ${recipe.diet}</span>
+
+                        <span>⏱️ ${recipe.time}</span>
+
+                        <span>⭐ ${recipe.rating}</span>
+
+                    </div>
+
+                    <div class="buttons">
+
+                        <a
+                            href="recipe.html?id=${id}"
+                            class="view-btn">
+                            View Recipe
+                        </a>
+
+                        <button
+                            class="remove-btn"
+                            onclick="removeFavorite('${id}')">
+                            Remove
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+
+function removeFavorite(id) {
+
+    let favorites =
+        JSON.parse(
+            localStorage.getItem("favoriteRecipes")
+        ) || [];
+
+    favorites =
+        favorites.filter(function(item) {
+            return item !== id;
+        });
+
+    localStorage.setItem(
+        "favoriteRecipes",
+        JSON.stringify(favorites)
+    );
+
+    displayFavorites();
+}
+
+
+displayFavorites();
+
+</script>
+
+</body>
+</html>

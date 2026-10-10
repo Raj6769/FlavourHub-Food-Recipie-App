@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FlavorHub - Login</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff7a18, #ffb347);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .box {
+            background: white;
+            width: 350px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff6b00;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: #ff6b00;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #e85d00;
+        }
+
+        p {
+            text-align: center;
+        }
+
+        a {
+            color: #ff6b00;
+        }
+
+        #message {
+            text-align: center;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h1>🍴 FlavorHub</h1>
+    <h2>Login</h2>
+
+    <form id="loginForm">
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Email"
+            required
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+        >
+
+        <button type="submit">Login</button>
+
+    </form>
+
+    <p id="message"></p>
+
+    <p>
+        Don't have an account?
+        <a href="signup.html">Sign Up</a>
+    </p>
+
+</div>
+
+<script>
+
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim().toLowerCase();
+    const password = document.getElementById("password").value;
+
+    // Get registered user
+    const savedUser = JSON.parse(
+        localStorage.getItem("flavorHubUser")
+    );
+
+    if (!savedUser) {
+
+        document.getElementById("message").textContent =
+            "No account found. Please sign up first.";
+
+        return;
+    }
+
+    // Check email and password
+    if (
+        email === savedUser.email &&
+        password === savedUser.password
+    ) {
+
+        localStorage.setItem("flavorHubLoggedIn", "true");
+
+        localStorage.setItem(
+            "flavorHubCurrentUser",
+            JSON.stringify(savedUser)
+        );
+
+        alert("Login successful! 🎉");
+
+        window.location.href = "home.html";
+
+    } else {
+
+        document.getElementById("message").textContent =
+            "Invalid email or password.";
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

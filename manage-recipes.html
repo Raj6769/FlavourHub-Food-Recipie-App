@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Manage Recipes - FlavorHub</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+}
+
+header {
+    background: #ff6b00;
+    color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.recipe-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.recipe {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.recipe-icon {
+    font-size: 50px;
+}
+
+.recipe h3 {
+    margin: 10px 0;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #fff3cd;
+    color: #856404;
+    font-size: 13px;
+}
+
+button {
+    border: none;
+    padding: 9px 12px;
+    margin: 5px 3px 0 0;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.approve {
+    background: #28a745;
+    color: white;
+}
+
+.reject {
+    background: #dc3545;
+    color: white;
+}
+
+.delete {
+    background: #333;
+    color: white;
+}
+
+.empty {
+    background: white;
+    padding: 40px;
+    text-align: center;
+    border-radius: 12px;
+}
+
+@media(max-width: 800px) {
+    .recipe-list {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>🍲 Manage Recipes</h1>
+
+    <nav>
+        <a href="admin-dashboard.html">Dashboard</a>
+        <a href="manage-users.html">Users</a>
+    </nav>
+
+</header>
+
+<div class="container">
+
+    <h2>Submitted Recipes</h2>
+
+    <div id="recipeList" class="recipe-list"></div>
+
+</div>
+
+<script>
+
+function getRecipes() {
+
+    return JSON.parse(
+        localStorage.getItem("submittedRecipes")
+    ) || [];
+
+}
+
+function saveRecipes(recipes) {
+
+    localStorage.setItem(
+        "submittedRecipes",
+        JSON.stringify(recipes)
+    );
+
+}
+
+function displayRecipes() {
+
+    const recipes = getRecipes();
+
+    const container =
+        document.getElementById("recipeList");
+
+    if (recipes.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty">
+                <h2>No Submitted Recipes</h2>
+                <p>Users have not submitted any recipes yet.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML = recipes.map((recipe, index) => `
+
+        <div class="recipe">
+
+            <div class="recipe-icon">
+                ${recipe.icon || "🍴"}
+            </div>
+
+            <h3>${recipe.name}</h3>
+
+            <p>
+                <b>Cuisine:</b>
+                ${recipe.cuisine}
+            </p>
+
+            <p>
+                <b>Diet:</b>
+                ${recipe.diet}
+            </p>
+
+            <p>
+                <b>Submitted By:</b>
+                ${recipe.submittedBy || "User"}
+            </p>
+
+            <span class="status">
+                ${recipe.status || "Pending"}
+            </span>
+
+            <br><br>
+
+            <button
+                class="approve"
+                onclick="approveRecipe(${index})">
+                ✓ Approve
+            </button>
+
+            <button
+                class="reject"
+                onclick="rejectRecipe(${index})">
+                ✕ Reject
+            </button>
+
+            <button
+                class="delete"
+                onclick="deleteRecipe(${index})">
+                🗑 Delete
+            </button>
+
+        </div>
+
+    `).join("");
+
+}
+
+function approveRecipe(index) {
+
+    const recipes = getRecipes();
+
+    recipes[index].status = "Approved";
+
+    saveRecipes(recipes);
+
+    alert("Recipe approved!");
+
+    displayRecipes();
+
+}
+
+function rejectRecipe(index) {
+
+    const recipes = getRecipes();
+
+    recipes[index].status = "Rejected";
+
+    saveRecipes(recipes);
+
+    alert("Recipe rejected!");
+
+    displayRecipes();
+
+}
+
+function deleteRecipe(index) {
+
+    if (!confirm("Delete this recipe?")) {
+        return;
+    }
+
+    const recipes = getRecipes();
+
+    recipes.splice(index, 1);
+
+    saveRecipes(recipes);
+
+    displayRecipes();
+
+}
+
+displayRecipes();
+
+</script>
+
+</body>
+</html>

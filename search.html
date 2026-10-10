@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Search Recipes - FlavorHub</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#fffaf5;
+    color:#333;
+}
+
+.navbar{
+    height:70px;
+    background:white;
+    padding:0 7%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.logo{
+    font-size:26px;
+    font-weight:bold;
+    color:#e85d04;
+}
+
+nav{
+    display:flex;
+    gap:25px;
+}
+
+nav a{
+    text-decoration:none;
+    color:#333;
+}
+
+nav a:hover{
+    color:#e85d04;
+}
+
+.search-header{
+    text-align:center;
+    padding:60px 20px;
+    background:linear-gradient(120deg,#fff1e6,#ffe8cc);
+}
+
+.search-header h1{
+    font-size:42px;
+    margin-bottom:15px;
+}
+
+.search-header p{
+    color:#666;
+}
+
+.search-area{
+    width:80%;
+    margin:40px auto;
+}
+
+.search-box{
+    display:flex;
+    gap:10px;
+    margin-bottom:25px;
+}
+
+.search-box input{
+    flex:1;
+    padding:16px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-size:16px;
+    outline:none;
+}
+
+.search-box input:focus{
+    border-color:#e85d04;
+}
+
+.search-box button{
+    padding:0 30px;
+    border:none;
+    border-radius:8px;
+    background:#e85d04;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.filters{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:15px;
+    margin-bottom:35px;
+}
+
+.filters select{
+    padding:13px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    background:white;
+}
+
+.result-text{
+    margin-bottom:20px;
+    color:#666;
+}
+
+.recipe-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:25px;
+}
+
+.recipe-card{
+    background:white;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.recipe-image{
+    height:170px;
+    background:#ffe8cc;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:70px;
+}
+
+.recipe-info{
+    padding:20px;
+}
+
+.category{
+    color:#e85d04;
+    font-size:13px;
+}
+
+.recipe-info h3{
+    margin:10px 0;
+}
+
+.recipe-info p{
+    color:#666;
+    line-height:1.5;
+}
+
+.view-btn{
+    display:block;
+    text-align:center;
+    margin-top:15px;
+    background:#e85d04;
+    color:white;
+    text-decoration:none;
+    padding:10px;
+    border-radius:7px;
+}
+
+.no-results{
+    text-align:center;
+    padding:50px;
+    background:white;
+    border-radius:12px;
+}
+
+@media(max-width:1000px){
+
+    .recipe-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .navbar{
+        height:auto;
+        padding:20px;
+        flex-direction:column;
+        gap:15px;
+    }
+
+    nav{
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    .search-area{
+        width:90%;
+    }
+
+    .search-box{
+        flex-direction:column;
+    }
+
+    .search-box button{
+        padding:14px;
+    }
+
+    .filters{
+        grid-template-columns:1fr;
+    }
+
+    .recipe-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="logo">
+🍴 FlavorHub
+</div>
+
+<nav>
+
+<a href="home.html">Home</a>
+
+<a href="recipes.html">Recipes</a>
+
+<a href="search.html">Search</a>
+
+<a href="favorites.html">Favorites</a>
+
+</nav>
+
+</header>
+
+
+<section class="search-header">
+
+<h1>Find Your Perfect Recipe 🔎</h1>
+
+<p>
+Search by recipe name, ingredient, cuisine or diet.
+</p>
+
+</section>
+
+
+<section class="search-area">
+
+<div class="search-box">
+
+<input
+    type="text"
+    id="searchInput"
+    placeholder="Try chicken, pasta, Indian, vegetarian..."
+>
+
+<button onclick="searchRecipes()">
+Search
+</button>
+
+</div>
+
+
+<div class="filters">
+
+<select id="cuisineFilter" onchange="searchRecipes()">
+
+<option value="">All Cuisines</option>
+
+<option value="Indian">Indian</option>
+
+<option value="Italian">Italian</option>
+
+<option value="Chinese">Chinese</option>
+
+<option value="American">American</option>
+
+<option value="International">International</option>
+
+</select>
+
+
+<select id="dietFilter" onchange="searchRecipes()">
+
+<option value="">All Diets</option>
+
+<option value="Vegetarian">Vegetarian</option>
+
+<option value="Non-Vegetarian">Non-Vegetarian</option>
+
+<option value="Vegan">Vegan</option>
+
+</select>
+
+
+<select id="sortFilter" onchange="searchRecipes()">
+
+<option value="">Sort By</option>
+
+<option value="name">Name A-Z</option>
+
+<option value="rating">Highest Rating</option>
+
+</select>
+
+</div>
+
+
+<div class="result-text" id="resultText"></div>
+
+
+<div
+    class="recipe-grid"
+    id="results"
+></div>
+
+</section>
+
+
+<script>
+
+const recipes = [
+
+{
+id:"chicken-biryani",
+name:"Chicken Biryani",
+cuisine:"Indian",
+diet:"Non-Vegetarian",
+rating:4.8,
+icon:"🍛",
+description:"Aromatic rice cooked with tender chicken and flavorful spices.",
+ingredients:"chicken rice onion tomato yogurt ginger garlic spices"
+},
+
+{
+id:"paneer-butter-masala",
+name:"Paneer Butter Masala",
+cuisine:"Indian",
+diet:"Vegetarian",
+rating:4.7,
+icon:"🥘",
+description:"Soft paneer cooked in a creamy tomato gravy.",
+ingredients:"paneer tomato butter cream onion cashew spices"
+},
+
+{
+id:"masala-dosa",
+name:"Masala Dosa",
+cuisine:"Indian",
+diet:"Vegetarian",
+rating:4.6,
+icon:"🥞",
+description:"Crispy dosa filled with spicy potato masala.",
+ingredients:"rice urad dal potato onion curry leaves"
+},
+
+{
+id:"pasta",
+name:"Classic Pasta",
+cuisine:"Italian",
+diet:"Vegetarian",
+rating:4.5,
+icon:"🍝",
+description:"Pasta served with homemade tomato sauce.",
+ingredients:"pasta tomato garlic onion olive oil cheese basil"
+},
+
+{
+id:"pizza",
+name:"Margherita Pizza",
+cuisine:"Italian",
+diet:"Vegetarian",
+rating:4.7,
+icon:"🍕",
+description:"Classic pizza with tomato, mozzarella and basil.",
+ingredients:"flour tomato mozzarella cheese basil olive oil"
+},
+
+{
+id:"fried-rice",
+name:"Vegetable Fried Rice",
+cuisine:"Chinese",
+diet:"Vegetarian",
+rating:4.4,
+icon:"🍚",
+description:"Fried rice with fresh vegetables and soy sauce.",
+ingredients:"rice carrot peas capsicum soy sauce onion garlic"
+},
+
+{
+id:"chicken-curry",
+name:"Chicken Curry",
+cuisine:"Indian",
+diet:"Non-Vegetarian",
+rating:4.8,
+icon:"🍗",
+description:"Tender chicken cooked in a spicy Indian curry.",
+ingredients:"chicken onion tomato ginger garlic chilli spices"
+},
+
+{
+id:"chocolate-cake",
+name:"Chocolate Cake",
+cuisine:"International",
+diet:"Vegetarian",
+rating:4.9,
+icon:"🍰",
+description:"Soft and delicious chocolate cake.",
+ingredients:"flour cocoa sugar milk butter egg chocolate"
+},
+
+{
+id:"idli-sambar",
+name:"Idli Sambar",
+cuisine:"Indian",
+diet:"Vegetarian",
+rating:4.6,
+icon:"🥣",
+description:"Soft steamed idlis served with flavorful sambar.",
+ingredients:"rice urad dal toor dal tomato onion vegetables"
+},
+
+{
+id:"veg-biryani",
+name:"Vegetable Biryani",
+cuisine:"Indian",
+diet:"Vegetarian",
+rating:4.5,
+icon:"🍲",
+description:"Fragrant basmati rice cooked with vegetables.",
+ingredients:"rice carrot beans peas potato onion spices"
+},
+
+{
+id:"pancakes",
+name:"Pancakes",
+cuisine:"American",
+diet:"Vegetarian",
+rating:4.4,
+icon:"🥞",
+description:"Fluffy pancakes served with syrup.",
+ingredients:"flour milk egg sugar butter maple syrup"
+},
+
+{
+id:"salad",
+name:"Fresh Vegetable Salad",
+cuisine:"International",
+diet:"Vegan",
+rating:4.3,
+icon:"🥗",
+description:"Healthy fresh vegetable salad.",
+ingredients:"lettuce tomato cucumber carrot onion lemon"
+}
+
+];
+
+
+function searchRecipes(){
+
+let search =
+document.getElementById("searchInput")
+.value
+.toLowerCase()
+.trim();
+
+let cuisine =
+document.getElementById("cuisineFilter")
+.value;
+
+let diet =
+document.getElementById("dietFilter")
+.value;
+
+let sort =
+document.getElementById("sortFilter")
+.value;
+
+
+let results = recipes.filter(recipe => {
+
+let searchable =
+(
+recipe.name +
+" " +
+recipe.cuisine +
+" " +
+recipe.diet +
+" " +
+recipe.ingredients
+).toLowerCase();
+
+let matchesSearch =
+search === "" ||
+searchable.includes(search);
+
+let matchesCuisine =
+cuisine === "" ||
+recipe.cuisine === cuisine;
+
+let matchesDiet =
+diet === "" ||
+recipe.diet === diet;
+
+return (
+matchesSearch &&
+matchesCuisine &&
+matchesDiet
+);
+
+});
+
+
+if(sort === "name"){
+
+results.sort((a,b) =>
+a.name.localeCompare(b.name)
+);
+
+}
+
+
+if(sort === "rating"){
+
+results.sort((a,b) =>
+b.rating - a.rating
+);
+
+}
+
+
+displayResults(results);
+
+}
+
+
+function displayResults(results){
+
+const container =
+document.getElementById("results");
+
+const resultText =
+document.getElementById("resultText");
+
+
+resultText.textContent =
+results.length +
+" recipe(s) found";
+
+
+container.innerHTML = "";
+
+
+if(results.length === 0){
+
+container.innerHTML = `
+
+<div class="no-results">
+
+<h2>😔 No recipes found</h2>
+
+<p>
+Try another recipe name, ingredient,
+cuisine or dietary preference.
+</p>
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+results.forEach(recipe => {
+
+container.innerHTML += `
+
+<div class="recipe-card">
+
+<div class="recipe-image">
+${recipe.icon}
+</div>
+
+<div class="recipe-info">
+
+<span class="category">
+${recipe.cuisine} • ${recipe.diet}
+</span>
+
+<h3>
+${recipe.name}
+</h3>
+
+<p>
+${recipe.description}
+</p>
+
+<p>
+⭐ ${recipe.rating}
+</p>
+
+<a
+href="recipe.html?id=${recipe.id}"
+class="view-btn"
+>
+View Recipe
+</a>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+document
+.getElementById("searchInput")
+.addEventListener("keyup", function(event){
+
+if(event.key === "Enter"){
+
+searchRecipes();
+
+}
+
+});
+
+
+searchRecipes();
+
+</script>
+
+</body>
+</html>

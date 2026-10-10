@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submit Recipe - FlavorHub</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f7f7f7;
+    color:#222;
+}
+
+nav{
+    background:#ff7043;
+    padding:15px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.logo{
+    color:white;
+    font-size:25px;
+    font-weight:bold;
+}
+
+.nav-links{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.nav-links a{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.container{
+    width:90%;
+    max-width:800px;
+    margin:35px auto;
+}
+
+.form-box{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 4px 15px rgba(0,0,0,.1);
+}
+
+h1{
+    text-align:center;
+    color:#ff5722;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+    margin-bottom:30px;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    margin-bottom:7px;
+    font-weight:bold;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:7px;
+    font-size:15px;
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+button{
+    width:100%;
+    background:#ff7043;
+    color:white;
+    border:none;
+    padding:14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+.note{
+    background:#fff3e0;
+    padding:15px;
+    border-radius:8px;
+    margin-bottom:20px;
+    color:#555;
+}
+
+@media(max-width:600px){
+    .row{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+
+    <div class="logo">🍴 FlavorHub</div>
+
+    <div class="nav-links">
+        <a href="home.html">Home</a>
+        <a href="recipes.html">Recipes</a>
+        <a href="search.html">Search</a>
+        <a href="favorites.html">Favorites</a>
+        <a href="collections.html">Collections</a>
+    </div>
+
+</nav>
+
+<div class="container">
+
+    <div class="form-box">
+
+        <h1>🍳 Submit Your Recipe</h1>
+
+        <p class="subtitle">
+            Share your favorite recipe with the FlavorHub community.
+        </p>
+
+        <div class="note">
+            Your recipe will be submitted to the Admin for review.
+        </div>
+
+        <form id="recipeForm">
+
+            <div class="form-group">
+
+                <label>Recipe Name</label>
+
+                <input
+                    type="text"
+                    id="recipeName"
+                    placeholder="Enter recipe name"
+                    required>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="form-group">
+
+                    <label>Cuisine</label>
+
+                    <select id="cuisine" required>
+
+                        <option value="">
+                            Select Cuisine
+                        </option>
+
+                        <option>Indian</option>
+                        <option>Italian</option>
+                        <option>Chinese</option>
+                        <option>American</option>
+                        <option>International</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Diet</label>
+
+                    <select id="diet" required>
+
+                        <option value="">
+                            Select Diet
+                        </option>
+
+                        <option>Vegetarian</option>
+                        <option>Non-Vegetarian</option>
+                        <option>Vegan</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="form-group">
+
+                    <label>Preparation Time</label>
+
+                    <input
+                        type="text"
+                        id="time"
+                        placeholder="Example: 30 min"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Recipe Icon</label>
+
+                    <select id="icon">
+
+                        <option>🍛</option>
+                        <option>🍕</option>
+                        <option>🍝</option>
+                        <option>🍰</option>
+                        <option>🥗</option>
+                        <option>🍚</option>
+                        <option>🥞</option>
+                        <option>🍗</option>
+                        <option>🥘</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Description</label>
+
+                <textarea
+                    id="description"
+                    placeholder="Describe your recipe..."
+                    required></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Ingredients</label>
+
+                <textarea
+                    id="ingredients"
+                    placeholder="Enter one ingredient per line"
+                    required></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Preparation Steps</label>
+
+                <textarea
+                    id="steps"
+                    placeholder="Enter one step per line"
+                    required></textarea>
+
+            </div>
+
+
+            <button type="submit">
+                Submit Recipe
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+document
+.getElementById("recipeForm")
+.addEventListener("submit", function(event){
+
+    event.preventDefault();
+
+
+    const name =
+        document.getElementById("recipeName")
+        .value.trim();
+
+    const cuisine =
+        document.getElementById("cuisine")
+        .value;
+
+    const diet =
+        document.getElementById("diet")
+        .value;
+
+    const time =
+        document.getElementById("time")
+        .value.trim();
+
+    const icon =
+        document.getElementById("icon")
+        .value;
+
+    const description =
+        document.getElementById("description")
+        .value.trim();
+
+    const ingredients =
+        document.getElementById("ingredients")
+        .value
+        .split("\n")
+        .map(item => item.trim())
+        .filter(item => item !== "");
+
+    const steps =
+        document.getElementById("steps")
+        .value
+        .split("\n")
+        .map(item => item.trim())
+        .filter(item => item !== "");
+
+
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem(
+                "flavorHubCurrentUser"
+            )
+        ) || {name:"Guest",email:""};
+
+
+    const submittedRecipes =
+        JSON.parse(
+            localStorage.getItem(
+                "submittedRecipes"
+            )
+        ) || [];
+
+
+    const newRecipe = {
+
+        id:
+            "custom-" +
+            Date.now(),
+
+        name:name,
+
+        cuisine:cuisine,
+
+        diet:diet,
+
+        time:time,
+
+        icon:icon,
+
+        description:description,
+
+        ingredients:ingredients,
+
+        steps:steps,
+
+        rating:"New",
+
+        status:"Pending",
+
+        submittedBy:
+            currentUser.name,
+
+        email:
+            currentUser.email,
+
+        submittedDate:
+            new Date().toLocaleDateString()
+
+    };
+
+
+    submittedRecipes.push(newRecipe);
+
+
+    localStorage.setItem(
+        "submittedRecipes",
+        JSON.stringify(submittedRecipes)
+    );
+
+
+    alert(
+        "Recipe submitted successfully! It is waiting for Admin approval."
+    );
+
+
+    document
+    .getElementById("recipeForm")
+    .reset();
+
+});
+
+</script>
+
+</body>
+</html>

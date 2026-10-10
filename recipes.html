@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipes - FlavorHub</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#fffaf5;
+    color:#333;
+}
+
+.navbar{
+    background:white;
+    height:70px;
+    padding:0 7%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.logo{
+    font-size:26px;
+    font-weight:bold;
+    color:#e85d04;
+}
+
+nav{
+    display:flex;
+    gap:25px;
+    align-items:center;
+}
+
+nav a{
+    text-decoration:none;
+    color:#333;
+}
+
+nav a:hover{
+    color:#e85d04;
+}
+
+.page-header{
+    text-align:center;
+    padding:60px 20px;
+    background:linear-gradient(120deg,#fff1e6,#ffe8cc);
+}
+
+.page-header h1{
+    font-size:45px;
+    margin-bottom:15px;
+}
+
+.page-header p{
+    color:#666;
+    font-size:18px;
+}
+
+.container{
+    width:84%;
+    margin:50px auto;
+}
+
+.recipe-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:25px;
+}
+
+.recipe-card{
+    background:white;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.recipe-card:hover{
+    transform:translateY(-5px);
+}
+
+.recipe-image{
+    height:190px;
+    background:#ffe8cc;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:75px;
+}
+
+.recipe-info{
+    padding:20px;
+}
+
+.category{
+    color:#e85d04;
+    background:#fff0e0;
+    padding:5px 10px;
+    border-radius:15px;
+    font-size:13px;
+}
+
+.recipe-info h3{
+    margin:15px 0 10px;
+}
+
+.recipe-info p{
+    color:#666;
+    line-height:1.5;
+    min-height:48px;
+}
+
+.details{
+    margin:15px 0;
+    color:#777;
+    font-size:14px;
+}
+
+.view-btn{
+    display:block;
+    text-align:center;
+    background:#e85d04;
+    color:white;
+    padding:11px;
+    border-radius:7px;
+    text-decoration:none;
+}
+
+.view-btn:hover{
+    background:#c94d00;
+}
+
+@media(max-width:1000px){
+    .recipe-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:600px){
+    .navbar{
+        height:auto;
+        padding:20px;
+        flex-direction:column;
+        gap:15px;
+    }
+
+    nav{
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    .recipe-grid{
+        grid-template-columns:1fr;
+    }
+
+    .page-header h1{
+        font-size:35px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">🍴 FlavorHub</div>
+
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="recipes.html">Recipes</a>
+        <a href="search.html">Search</a>
+        <a href="favorites.html">Favorites</a>
+        <a href="index.html">Logout</a>
+    </nav>
+
+</header>
+
+
+<section class="page-header">
+
+    <h1>Explore Our Recipes 🍽️</h1>
+
+    <p>
+        Discover delicious dishes from different cuisines.
+    </p>
+
+</section>
+
+
+<div class="container">
+
+    <div class="recipe-grid" id="recipeGrid"></div>
+
+</div>
+
+
+<script>
+
+const recipes = [
+
+{
+    id:"chicken-biryani",
+    name:"Chicken Biryani",
+    cuisine:"Indian",
+    diet:"Non-Vegetarian",
+    time:"60 min",
+    rating:"4.8",
+    icon:"🍛",
+    description:"Aromatic rice cooked with tender chicken and flavorful spices.",
+    ingredients:"chicken,rice,onion,tomato,yogurt,ginger,garlic,spices"
+},
+
+{
+    id:"paneer-butter-masala",
+    name:"Paneer Butter Masala",
+    cuisine:"Indian",
+    diet:"Vegetarian",
+    time:"40 min",
+    rating:"4.7",
+    icon:"🥘",
+    description:"Soft paneer cooked in a creamy and rich tomato gravy.",
+    ingredients:"paneer,tomato,butter,cream,onion,cashew,spices"
+},
+
+{
+    id:"masala-dosa",
+    name:"Masala Dosa",
+    cuisine:"Indian",
+    diet:"Vegetarian",
+    time:"35 min",
+    rating:"4.6",
+    icon:"🥞",
+    description:"Crispy dosa filled with delicious spiced potato masala.",
+    ingredients:"rice,urad dal,potato,onion,mustard,seeds,curry leaves"
+},
+
+{
+    id:"pasta",
+    name:"Classic Pasta",
+    cuisine:"Italian",
+    diet:"Vegetarian",
+    time:"30 min",
+    rating:"4.5",
+    icon:"🍝",
+    description:"Pasta served with a delicious homemade tomato sauce.",
+    ingredients:"pasta,tomato,garlic,onion,olive oil,cheese,basil"
+},
+
+{
+    id:"pizza",
+    name:"Margherita Pizza",
+    cuisine:"Italian",
+    diet:"Vegetarian",
+    time:"35 min",
+    rating:"4.7",
+    icon:"🍕",
+    description:"Classic pizza topped with tomato, mozzarella and basil.",
+    ingredients:"flour,tomato,mozzarella,cheese,basil,olive oil"
+},
+
+{
+    id:"fried-rice",
+    name:"Vegetable Fried Rice",
+    cuisine:"Chinese",
+    diet:"Vegetarian",
+    time:"25 min",
+    rating:"4.4",
+    icon:"🍚",
+    description:"Fried rice loaded with fresh vegetables and sauces.",
+    ingredients:"rice,carrot,peas,capsicum,soy sauce,onion,garlic"
+},
+
+{
+    id:"chicken-curry",
+    name:"Chicken Curry",
+    cuisine:"Indian",
+    diet:"Non-Vegetarian",
+    time:"50 min",
+    rating:"4.8",
+    icon:"🍗",
+    description:"Tender chicken cooked in a spicy Indian curry.",
+    ingredients:"chicken,onion,tomato,ginger,garlic,chilli,spices"
+},
+
+{
+    id:"chocolate-cake",
+    name:"Chocolate Cake",
+    cuisine:"International",
+    diet:"Vegetarian",
+    time:"50 min",
+    rating:"4.9",
+    icon:"🍰",
+    description:"Soft and delicious chocolate cake perfect for dessert.",
+    ingredients:"flour,cocoa,sugar,milk,butter,egg,chocolate"
+},
+
+{
+    id:"idli-sambar",
+    name:"Idli Sambar",
+    cuisine:"Indian",
+    diet:"Vegetarian",
+    time:"40 min",
+    rating:"4.6",
+    icon:"🥣",
+    description:"Soft steamed idlis served with flavorful sambar.",
+    ingredients:"rice,urad dal,toor dal,tomato,onion,vegetables"
+},
+
+{
+    id:"veg-biryani",
+    name:"Vegetable Biryani",
+    cuisine:"Indian",
+    diet:"Vegetarian",
+    time:"50 min",
+    rating:"4.5",
+    icon:"🍲",
+    description:"Fragrant basmati rice cooked with mixed vegetables.",
+    ingredients:"rice,carrot,beans,peas,potato,onion,spices"
+},
+
+{
+    id:"pancakes",
+    name:"Pancakes",
+    cuisine:"American",
+    diet:"Vegetarian",
+    time:"20 min",
+    rating:"4.4",
+    icon:"🥞",
+    description:"Fluffy pancakes served with syrup and fresh fruit.",
+    ingredients:"flour,milk,egg,sugar,butter,maple syrup"
+},
+
+{
+    id:"salad",
+    name:"Fresh Vegetable Salad",
+    cuisine:"International",
+    diet:"Vegan",
+    time:"15 min",
+    rating:"4.3",
+    icon:"🥗",
+    description:"Healthy fresh vegetable salad with a simple dressing.",
+    ingredients:"lettuce,tomato,cucumber,carrot,onion,lemon"
+}
+
+];
+
+
+const grid =
+document.getElementById("recipeGrid");
+
+
+recipes.forEach(recipe => {
+
+    grid.innerHTML += `
+
+        <div class="recipe-card">
+
+            <div class="recipe-image">
+                ${recipe.icon}
+            </div>
+
+            <div class="recipe-info">
+
+                <span class="category">
+                    ${recipe.cuisine}
+                </span>
+
+                <h3>
+                    ${recipe.name}
+                </h3>
+
+                <p>
+                    ${recipe.description}
+                </p>
+
+                <div class="details">
+                    ⏱ ${recipe.time}
+                    &nbsp;&nbsp;
+                    ⭐ ${recipe.rating}
+                </div>
+
+                <a
+                    class="view-btn"
+                    href="recipe.html?id=${recipe.id}"
+                >
+                    View Recipe
+                </a>
+
+            </div>
+
+        </div>
+
+    `;
+
+});
+
+</script>
+
+</body>
+</html>
